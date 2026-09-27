@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Cyberpunk Tetris</title>
+    <!-- 외부 스타일시트 연결 -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts에서 사이버펑크 느낌과 어울리는 폰트(Orbitron) 불러오기 -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 게임 전체를 감싸는 글래스모피즘 컨테이너 -->
+    <div class="game-container">
+        <!-- 메인 테트리스 게임판을 그릴 캔버스 요소 -->
+        <canvas id="tetris-canvas" width="300" height="600"></canvas>
+        
+        <!-- 오른쪽 정보 패널 (점수, 레벨, 다음 블록 표시) -->
+        <div class="info-panel">
+            <h1 class="title">NEON<br>TETRIS</h1>
+            
+            <div class="score-box">
+                <h2>SCORE</h2>
+                <!-- 현재 점수가 표시될 공간 -->
+                <p id="score">0</p>
+            </div>
+            
+            <div class="level-box">
+                <h2>LEVEL</h2>
+                <!-- 현재 레벨이 표시될 공간 -->
+                <p id="level">1</p>
+            </div>
+            
+            <div class="next-box">
+                <h2>NEXT</h2>
+                <!-- 다음 떨어질 블록을 미리 보여줄 작은 캔버스 -->
+                <canvas id="next-canvas" width="120" height="120"></canvas>
+            </div>
+            
+            <!-- 게임 조작 방법을 알려주는 간단한 가이드 -->
+            <div class="controls-guide">
+                <p><strong>[↑]</strong> 회전</p>
+                <p><strong>[←] [→]</strong> 이동</p>
+                <p><strong>[↓]</strong> 빨리 내리기</p>
+            </div>
+        </div>
+        
+        <!-- 게임 시작 전 또는 게임 오버 시 화면을 덮는 오버레이(모달 창) -->
+        <div id="overlay" class="overlay">
+            <h2 id="overlay-title">TETRIS</h2>
+            <p id="overlay-desc">준비되셨나요?</p>
+            
+            <!-- 초기 레벨 선택 슬라이더 영역 -->
+            <div class="level-selector">
+                <label for="start-level">시작 레벨: <span id="start-level-display">1</span></label>
+                <input type="range" id="start-level" min="1" max="15" value="1">
+            </div>
+
+            <button id="start-btn">GAME START</button>
+        </div>
+    </div>
+
+    <!-- 테트리스 로직이 담긴 자바스크립트 파일 연결 -->
+    <script src="script.js"></script>
+</body>
+</html>

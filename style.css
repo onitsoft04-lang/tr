@@ -1,0 +1,236 @@
+/* CSS 변수 설정: 게임에서 사용할 사이버펑크 스타일의 네온 색상들 정의 */
+:root {
+    --bg-color: #0d0e15; /* 아주 어두운 남색 계열 배경 */
+    --panel-bg: rgba(20, 25, 45, 0.4); /* 반투명한 패널 배경 (글래스모피즘용) */
+    --panel-border: rgba(0, 255, 255, 0.3); /* 사이버펑크 느낌의 청록색 테두리 */
+    --neon-cyan: #00f3ff;
+    --neon-pink: #ff00ea;
+    --text-main: #ffffff;
+    --text-dim: #a0a5cc;
+}
+
+/* 모든 요소의 기본 여백(margin, padding)을 없애고 박스 크기 계산을 통일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* body 설정: 화면 전체를 덮고 요소를 중앙에 배치 */
+body {
+    background-color: var(--bg-color);
+    /* 멋진 사이버펑크 느낌의 배경 그라데이션 */
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(255, 0, 234, 0.08), transparent 30%),
+        radial-gradient(circle at 85% 30%, rgba(0, 243, 255, 0.08), transparent 30%);
+    color: var(--text-main);
+    font-family: 'Orbitron', sans-serif; /* 불러온 미래지향적 폰트 적용 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden; /* 스크롤바 숨기기 */
+}
+
+/* 게임 전체 컨테이너 (글래스모피즘 효과 적용) */
+.game-container {
+    display: flex;
+    gap: 30px; /* 캔버스와 정보 패널 사이의 간격 */
+    padding: 30px;
+    background: var(--panel-bg);
+    border-radius: 15px; /* 모서리 둥글게 */
+    border: 1px solid var(--panel-border);
+    /* 뒤쪽 배경을 블러 처리하여 유리처럼 보이게 함 (글래스모피즘 핵심) */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    /* 네온 빛 효과 (바깥쪽 그림자) */
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.1),
+                inset 0 0 20px rgba(255, 0, 234, 0.05);
+    position: relative; /* 자식 요소(오버레이)가 기준점을 잡을 수 있게 설정 */
+}
+
+/* 메인 게임 캔버스 (테트리스 보드) */
+#tetris-canvas {
+    background-color: rgba(0, 0, 0, 0.8); /* 게임판 자체는 아주 어둡게 설정 */
+    border: 2px solid var(--neon-cyan);
+    border-radius: 5px;
+    /* 캔버스 겉에서 빛이 뿜어져 나오는 효과 */
+    box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+/* 오른쪽 정보 패널 구역 */
+.info-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 요소들 사이 간격을 균등하게 벌림 */
+    width: 200px;
+}
+
+/* 게임 타이틀 텍스트 스타일 */
+.title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-align: center;
+    color: var(--text-main);
+    /* 글자 자체에서 네온 빛이 나는 텍스트 섀도우 효과 */
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink);
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+/* 점수, 레벨 박스 스타일 */
+.score-box, .level-box, .next-box {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    margin-bottom: 20px;
+    /* 가벼운 네온 효과 */
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+}
+
+.score-box h2, .level-box h2, .next-box h2 {
+    font-size: 1rem;
+    color: var(--neon-cyan);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+#score, #level {
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+/* 다음 블록 캔버스 영역 설정 */
+#next-canvas {
+    background-color: transparent; /* 배경을 투명하게 */
+    margin: 0 auto;
+    display: block;
+}
+
+/* 조작 가이드 안내문 스타일 */
+.controls-guide {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+}
+.controls-guide strong {
+    color: var(--neon-pink);
+}
+
+/* 게임 시작/오버 시 화면을 덮는 모달(오버레이) 설정 */
+.overlay {
+    position: absolute; /* .game-container를 기준으로 위치 고정 */
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(13, 14, 21, 0.85); /* 반투명한 검정/남색 */
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    z-index: 10; /* 다른 요소들 위에 표시되도록 z-index 설정 */
+    /* 기본적으로 화면에 보이지만, JS에서 안 보이게 조절할 수 있음 */
+}
+
+/* 게임 화면 위에 가려졌을 때 처리 (클래스로 제어) */
+.overlay.hidden {
+    display: none;
+}
+
+#overlay-title {
+    font-size: 3rem;
+    color: var(--neon-pink);
+    text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-pink), 0 0 40px var(--neon-pink);
+    margin-bottom: 10px;
+}
+
+#overlay-desc {
+    font-size: 1.2rem;
+    color: var(--neon-cyan);
+    margin-bottom: 30px;
+}
+
+/* 멋진 네온 버튼 스타일 */
+#start-btn {
+    background: transparent;
+    color: var(--neon-cyan);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 15px 30px;
+    border: 2px solid var(--neon-cyan);
+    border-radius: 5px;
+    cursor: pointer; /* 마우스 올렸을 때 손가락 모양 */
+    transition: all 0.3s ease; /* 호버 시 애니메이션 효과를 부드럽게 */
+    box-shadow: 0 0 10px var(--neon-cyan), inset 0 0 10px var(--neon-cyan);
+}
+
+/* 마우스를 올렸을 때 버튼 이펙트 (호버 효과) */
+#start-btn:hover {
+    background: var(--neon-cyan);
+    color: #000; /* 글자색을 검은색으로 변경해 대비 효과 부여 */
+    box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan);
+}
+
+/* === 초기 레벨 선택 슬라이더 스타일 === */
+.level-selector {
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.level-selector label {
+    font-size: 1.2rem;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 5px var(--neon-cyan);
+}
+
+.level-selector span {
+    color: var(--neon-pink);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-shadow: 0 0 10px var(--neon-pink);
+}
+
+/* range input(슬라이더) 커스텀 디자인 */
+input[type=range] {
+    -webkit-appearance: none; /* 기본 디자인 제거 */
+    width: 250px;
+    background: transparent;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+/* 슬라이더 트랙(막대) 디자인 */
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: rgba(0, 243, 255, 0.2);
+    border-radius: 4px;
+    border: 1px solid var(--neon-cyan);
+    box-shadow: inset 0 0 5px var(--neon-cyan);
+}
+
+/* 슬라이더 썸(동그란 손잡이) 디자인 */
+input[type=range]::-webkit-slider-thumb {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: var(--neon-pink);
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -7px; /* 트랙 중앙에 맞추기 위한 오프셋 */
+    box-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+    border: 2px solid #fff;
+}
